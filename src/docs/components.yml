@@ -67,7 +67,7 @@ components:
             code: 401
             message: Please authenticate
     Forbidden:
-      description: Forbidden
+      description: Forbidden Data
       content:
         application/json:
           schema:
@@ -84,6 +84,15 @@ components:
           example:
             code: 404
             message: Not found
+    RequestDenied:
+      description: Request Denied
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 505
+            message: Request Denied
 
   securitySchemes:
     bearerAuth:
