@@ -13,11 +13,7 @@ router
     validate(userValidation.createUser),
     userController.createUser
   )
-  .get(
-    auth("getUsers"),
-    validate(userValidation.getUsers),
-    userController.getUsers
-  );
+  .get(userController.getUsers);
 
 router
   .route("/:userId")
@@ -36,6 +32,12 @@ router
     validate(userValidation.deleteUser),
     userController.deleteUser
   );
+
+router.patch(
+  "/UpdateUser/:userId",
+  validate(userValidation.updateUser),
+  userController.updateUserUsingMethod
+);
 
 module.exports = router;
 
@@ -104,8 +106,6 @@ module.exports = router;
  *     summary: Get all users
  *     description: Only admins can retrieve all users.
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: name
@@ -119,9 +119,15 @@ module.exports = router;
  *         description: User role
  *       - in: query
  *         name: sortBy
- *         schema:
- *           type: string
+ *         content:
+ *            application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                    role:
+ *                      type: number
  *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *         allowreserved: false
  *       - in: query
  *         name: limit
  *         schema:
@@ -168,13 +174,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /users/getuserByid/{id}:
- *   get:
- *     summary: Get a user by id
+ * /users/UpdateUser/{id}:
+ *   patch:
+ *     summary: Update a user by id
  *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -182,6 +186,28 @@ module.exports = router;
  *         schema:
  *           type: string
  *         description: User id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: must be unique
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 description: At least one number and one letter
+ *             example:
+ *               name: fake name
+ *               email: fake@example.com
+ *               password: password1
  *     responses:
  *       "200":
  *         description: OK

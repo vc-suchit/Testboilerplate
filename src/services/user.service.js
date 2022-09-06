@@ -8,6 +8,7 @@ const ApiError = require("../utils/ApiError");
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
+  console.log(userBody, "userBody");
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
@@ -28,6 +29,12 @@ const queryUsers = async (filter, options) => {
   return users;
 };
 
+const queryUsers1 = async (filter, options) => {
+  console.log(filter, options, "::::::::::::");
+  const users = await User.paginate(filter, options);
+  return users;
+};
+
 /**
  * Get user by id
  * @param {ObjectId} id
@@ -43,6 +50,7 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
+  // use .toArray method also
   return User.findOne({ email });
 };
 
@@ -60,6 +68,8 @@ const updateUserById = async (userId, updateBody) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
+
+  // copy and replace the source Object into target Object -> Suchit
   Object.assign(user, updateBody);
   await user.save();
   return user;
@@ -79,6 +89,22 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+/**
+ * Delete user by id
+ * @param {ObjectId} userId
+ * @returns {Promise<User>}
+ */
+const updateUserMethod = async (userId, updateBody) => {
+  const user = await User.findByIdAndUpdate(userId, { $set: updateBody });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
+  }
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -86,4 +112,6 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  updateUserMethod,
+  queryUsers1,
 };
