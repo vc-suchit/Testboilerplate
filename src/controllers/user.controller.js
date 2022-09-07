@@ -11,7 +11,7 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  console.log(req.query,'88888888888888888888')
+  console.log(req.query, '88888888888888888888')
   const filter = pick(req.query, ["name", "role"]);
   console.log(filter, "********filter*******", req.query);
   const options = pick(req.query, ["sortBy", "limit", "page"]);
@@ -44,6 +44,12 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getUserWithDept = catchAsync(async (req, res) => {
+  console.log("$$$$$$$RRR")
+  const user = await userService.getUserWithDept(req.params.userId);
+  res.send(user);
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -51,4 +57,5 @@ module.exports = {
   updateUser,
   deleteUser,
   updateUserUsingMethod,
+  getUserWithDept
 };

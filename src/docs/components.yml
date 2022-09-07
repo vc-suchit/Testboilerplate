@@ -19,6 +19,17 @@ components:
         name: fake name
         role: user
 
+    Department:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      example:
+        name: Computer Department
+        description: Here is a computer department for data.
+
     Token:
       type: object
       properties:

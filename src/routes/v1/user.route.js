@@ -39,6 +39,7 @@ router.patch(
   userController.updateUserUsingMethod
 );
 
+router.get("/getUserWithDept/:userId", userController.getUserWithDept);
 module.exports = router;
 
 /**

@@ -46,11 +46,21 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    department: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// In Department we also join using Object Id
+/**
+ * department: {
+      type: mongoose.Types.ObjectId, ref: "Department"
+    },
+ */
 
 userSchema.pre("save", async function (next) {
   console.log("JJJJJJJJJJJ", this);
@@ -71,7 +81,6 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
 userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   let a = await bcrypt.compare(password, user.password);
-  console.log(a, "dddddddddddddddd");
   return bcrypt.compare(password, user.password);
 };
 
@@ -82,6 +91,5 @@ userSchema.methods.isPasswordMatch = async function (password) {
 userSchema.plugin(mongoosePaginate);
 
 // mongoose-aggrigate-version-2
-
 const User = mongoose.model("User", userSchema);
 module.exports = User;

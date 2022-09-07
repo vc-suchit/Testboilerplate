@@ -30,7 +30,6 @@ const queryUsers = async (filter, options) => {
 };
 
 const queryUsers1 = async (filter, options) => {
-  console.log(filter, options, "::::::::::::");
   const users = await User.paginate(filter, options);
   return users;
 };
@@ -52,6 +51,21 @@ const getUserById = async (id) => {
 const getUserByEmail = async (email) => {
   // use .toArray method also
   return User.findOne({ email });
+};
+
+
+const getUserWithDept = async (userId) => {
+  // use .toArray method also
+  let aggregate = {
+    $lookup: {
+      from: 'departments',
+      localField: 'department',
+      foreignField: 'name',
+      as: 'modelUser'
+    }
+  }
+  const user = await User.aggregate([aggregate]);
+  return user;
 };
 
 /**
@@ -87,6 +101,7 @@ const deleteUserById = async (userId) => {
   }
   await user.remove();
   return user;
+
 };
 
 /**
@@ -114,4 +129,20 @@ module.exports = {
   deleteUserById,
   updateUserMethod,
   queryUsers1,
+  getUserWithDept
 };
+
+
+// console.log("**********%%%%%%%%%%%%")
+//   const user = await User.aggregate([
+//     {
+//       $lookup: {
+//         from: 'departments',
+//         localField: 'department',
+//         foreignField: 'name',
+//         as: 'modelUser'
+//       }
+//     }
+//   ]);
+//   console.log(user, '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+//   return user;
