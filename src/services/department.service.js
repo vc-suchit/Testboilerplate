@@ -9,20 +9,22 @@ const createDepartment = async (departmentBody) => {
 };
 
 const getDepartment = async (depId) => {
-    // let lookup = {
+    // {
     //     $lookup: {
     //         from: 'User', localField: 'name',
     //         foreignField: 'department', as: 'modelUser'
     //     }
     // }
-    return Department.aggregate([
-        {
-            $lookup: {
-                from: 'users', localField: 'name',
-                foreignField: 'department', as: 'modelUser'
-            }
+    let lookup = [{ $match: { "_id": depId } },
+    {
+        $lookup: {
+            from: 'users',
+            localField: 'name',
+            foreignField: 'department',
+            as: 'modelUsers'
         }
-    ]);
+    }]
+    return Department.aggregate(lookup);
     // return mongoose.model('Department').aggregate([lookup]);
 };
 
