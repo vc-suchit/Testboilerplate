@@ -16,6 +16,14 @@ const departmentSchema = mongoose.Schema(
             require: true,
             trim: true,
         },
+        subject: {
+            type: Object,
+            trim: true
+        },
+        isTrulyfullfiled: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true,

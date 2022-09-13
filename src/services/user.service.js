@@ -40,7 +40,8 @@ const queryUsers1 = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  console.log(User.find(id), "FFFFFFFFFFFFF")
+  return User.find(id);
 };
 
 /**

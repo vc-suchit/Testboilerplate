@@ -28,7 +28,18 @@ const getDepartment = async (depId) => {
     // return mongoose.model('Department').aggregate([lookup]);
 };
 
+
+const getDepartmentNotNull = async (depId) => {
+
+    let data = await Department.find({ "subject.*": { $ne: null } });
+    console.log(data, "data")
+    //  return
+};
+
+
+
 module.exports = {
     createDepartment,
-    getDepartment
+    getDepartment,
+    getDepartmentNotNull
 };
